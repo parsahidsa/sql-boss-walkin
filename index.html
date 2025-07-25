@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>SQL Boss Battle – Cinematic</title>
+  <meta charset="UTF-8">
+  <title>Angry Boss – Stage 1</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="room">
+    <div class="door"></div>
     <div class="boss" id="boss">
-      <img src="assets/boss-neutral.png" alt="Boss">
-      <div class="bubble" id="boss-dialogue">You have 20 seconds!</div>
+      <img src="assets/boss-walk.png" alt="Boss">
+      <div class="speech" id="speech-bubble">You have 20 seconds!</div>
     </div>
-
-    <div class="workspace">
-      <h2>Mission: Count all orders in the 'orders' table</h2>
+    <div class="monitor">
+      <h2>Mission: Count all orders in the <code>'orders'</code> table</h2>
       <div id="timer">⏳ 20s</div>
       <textarea id="sql-input" placeholder="Write your SQL query here..."></textarea>
       <button id="run-btn">▶ Run Query</button>
@@ -21,7 +21,6 @@
       <p id="feedback"></p>
     </div>
   </div>
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
   <script src="app.js"></script>
 </body>
