@@ -2,35 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>SQL Sniper: Sniff the Error</title>
+  <title>DataQuest Adventure</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
+  <div class="game-container">
     <header>
-      <h1>🎯 SQL Sniper</h1>
-      <p class="subtitle">Find and fix the SQL error before the timer runs out!</p>
+      <h1>🧠 DataQuest: SQL Adventure</h1>
+      <p class="subtitle">Level up your SQL skills on a quest for data mastery!</p>
     </header>
 
-    <main>
-      <div class="mission">
-        <h2>🚨 Broken Query:</h2>
-        <pre id="broken-query">SELECT customer_id, COUNT(*) FROM orders WHERE total > 100 GROUP BY product_id;</pre>
-        <p>💡 Hint: Something’s wrong with grouping or selecting...</p>
+    <section class="mission-box">
+      <div class="npc-avatar">🧙‍♂️</div>
+      <div class="npc-dialogue">
+        <h2 id="stage-title">Stage 1: Count Orders</h2>
+        <p id="mission-text">"Hey Analyst! Count how many orders exist in the <code>orders</code> table."</p>
+      </div>
+    </section>
+
+    <section class="main-panel">
+      <div class="data-preview">
+        <h3>📊 Preview Data</h3>
+        <div class="btn-group">
+          <button onclick="showTable('orders')">Orders</button>
+          <button onclick="showTable('order_items')">Order Items</button>
+        </div>
+        <pre id="table-preview">Click a table to preview its content.</pre>
       </div>
 
-      <div class="input-area">
-        <textarea id="sql-input" placeholder="Fix the query here..."></textarea>
-        <button id="run-btn">✅ Submit Fix</button>
-        <div id="feedback"></div>
-        <div id="result-table"></div>
+      <div class="query-box">
+        <textarea id="sql-input" placeholder="Write your SQL query here..."></textarea>
+        <button id="run-btn">▶ Run Query</button>
+        <div id="result-table">Query result will appear here.</div>
+        <p id="feedback"></p>
       </div>
-
-      <div class="hud">
-        <div id="timer">⏱ 20s</div>
-        <div id="score">⭐ Score: 0</div>
-      </div>
-    </main>
+    </section>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
