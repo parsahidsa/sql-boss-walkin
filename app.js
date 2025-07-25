@@ -1,8 +1,12 @@
-let db, countdown = 20, timer;
+let db, countdown = 20, timer, score = 0;
+
+const brokenQuery = "SELECT customer_id, COUNT(*) FROM orders WHERE total > 100 GROUP BY product_id;";
+const correctQuery = "SELECT customer_id, COUNT(*) FROM orders WHERE total > 100 GROUP BY customer_id;";
 
 const dbInitSql = `
-CREATE TABLE orders (id INTEGER, customer_id INTEGER);
-INSERT INTO orders VALUES (1,1),(2,1),(3,2),(4,1),(5,3),(6,1);
+CREATE TABLE orders (id INTEGER, customer_id INTEGER, total INTEGER);
+INSERT INTO orders VALUES
+(1, 1, 120), (2, 1, 80), (3, 2, 200), (4, 3, 300), (5, 2, 50);
 `;
 
 initSqlJs({ locateFile: f => "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/" + f }).then(SQL => {
@@ -18,21 +22,34 @@ function startCountdown() {
     updateTimer();
     if (countdown === 0) {
       clearInterval(timer);
-      document.getElementById("speech-bubble").textContent = "You're fired!";
-      document.getElementById("speech-bubble").style.background = "#f44336";
-      document.querySelector(".room").classList.add("shake");
+      showFeedback("❌ Time's up! You missed it!", false);
     }
   }, 1000);
 }
 
 function updateTimer() {
-  document.getElementById("timer").textContent = `⏳ ${countdown}s`;
+  document.getElementById("timer").textContent = `⏱ ${countdown}s`;
+}
+
+function showFeedback(msg, success) {
+  const feedback = document.getElementById("feedback");
+  feedback.textContent = msg;
+  feedback.style.color = success ? "#4caf50" : "#f44336";
 }
 
 document.getElementById("run-btn").addEventListener("click", () => {
-  const code = document.getElementById("sql-input").value;
+  const code = document.getElementById("sql-input").value.trim();
   try {
     const res = db.exec(code);
+    if (code.replace(/\s+/g, " ") === correctQuery.replace(/\s+/g, " ")) {
+      clearInterval(timer);
+      score += 100;
+      document.getElementById("score").textContent = `⭐ Score: ${score}`;
+      showFeedback("✅ Correct! You're a SQL Sniper!", true);
+    } else {
+      showFeedback("💥 Wrong fix! Try again...", false);
+    }
+
     let output = "";
     if (res.length > 0) {
       const cols = res[0].columns;
@@ -46,9 +63,8 @@ document.getElementById("run-btn").addEventListener("click", () => {
       output = "No results.";
     }
     document.getElementById("result-table").innerHTML = output;
-    document.getElementById("feedback").textContent = "";
   } catch (e) {
-    document.getElementById("result-table").textContent = e.message;
-    document.getElementById("feedback").textContent = "⛔ Error in query.";
+    showFeedback("💥 Syntax Error!", false);
+    document.getElementById("result-table").textContent = "";
   }
 });
