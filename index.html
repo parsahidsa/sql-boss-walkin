@@ -1,26 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Angry Boss – Stage 1</title>
+  <meta charset="UTF-8" />
+  <title>SQL Sniper: Sniff the Error</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="room">
-    <div class="door"></div>
-    <div class="boss" id="boss">
-      <img src="assets/boss-walk.png" alt="Boss">
-      <div class="speech" id="speech-bubble">You have 20 seconds!</div>
-    </div>
-    <div class="monitor">
-      <h2>Mission: Count all orders in the <code>'orders'</code> table</h2>
-      <div id="timer">⏳ 20s</div>
-      <textarea id="sql-input" placeholder="Write your SQL query here..."></textarea>
-      <button id="run-btn">▶ Run Query</button>
-      <div id="result-table"></div>
-      <p id="feedback"></p>
-    </div>
+  <div class="container">
+    <header>
+      <h1>🎯 SQL Sniper</h1>
+      <p class="subtitle">Find and fix the SQL error before the timer runs out!</p>
+    </header>
+
+    <main>
+      <div class="mission">
+        <h2>🚨 Broken Query:</h2>
+        <pre id="broken-query">SELECT customer_id, COUNT(*) FROM orders WHERE total > 100 GROUP BY product_id;</pre>
+        <p>💡 Hint: Something’s wrong with grouping or selecting...</p>
+      </div>
+
+      <div class="input-area">
+        <textarea id="sql-input" placeholder="Fix the query here..."></textarea>
+        <button id="run-btn">✅ Submit Fix</button>
+        <div id="feedback"></div>
+        <div id="result-table"></div>
+      </div>
+
+      <div class="hud">
+        <div id="timer">⏱ 20s</div>
+        <div id="score">⭐ Score: 0</div>
+      </div>
+    </main>
   </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
   <script src="app.js"></script>
 </body>
