@@ -1,70 +1,86 @@
-let db, countdown = 20, timer, score = 0;
+let db, stage = 0;
 
-const brokenQuery = "SELECT customer_id, COUNT(*) FROM orders WHERE total > 100 GROUP BY product_id;";
-const correctQuery = "SELECT customer_id, COUNT(*) FROM orders WHERE total > 100 GROUP BY customer_id;";
+const stages = [
+  {
+    title: "Stage 1: Count Orders",
+    mission: "Hey Analyst! Count how many orders exist in the orders table.",
+    answerCheck: (rows) => rows[0]?.values[0] == 6
+  },
+  {
+    title: "Stage 2: Loyal Customers",
+    mission: "Find customers who placed more than 3 orders.",
+    answerCheck: (rows) => rows.length === 1 && rows[0].values[0] == 1
+  }
+];
 
 const dbInitSql = `
-CREATE TABLE orders (id INTEGER, customer_id INTEGER, total INTEGER);
-INSERT INTO orders VALUES
-(1, 1, 120), (2, 1, 80), (3, 2, 200), (4, 3, 300), (5, 2, 50);
+CREATE TABLE orders (id INTEGER, customer_id INTEGER);
+INSERT INTO orders VALUES (1,1),(2,2),(3,1),(4,3),(5,1),(6,1);
+CREATE TABLE order_items (id INTEGER, order_id INTEGER, product_id INTEGER);
+INSERT INTO order_items VALUES (1,1,1),(2,2,2),(3,3,2),(4,4,3),(5,5,2),(6,6,2);
 `;
 
-initSqlJs({ locateFile: f => "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/" + f }).then(SQL => {
+function showStage() {
+  document.getElementById("stage-title").textContent = stages[stage].title;
+  document.getElementById("mission-text").textContent = stages[stage].mission;
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("sql-input").value = "";
+  document.getElementById("result-table").innerHTML = "Query result will appear here.";
+}
+
+function showTable(name) {
+  const res = db.exec("SELECT * FROM " + name);
+  if (res.length > 0) {
+    const cols = res[0].columns;
+    const rows = res[0].values;
+    let html = cols.join(" | ") + "\n";
+    html += "-".repeat(40) + "\n";
+    for (const row of rows) {
+      html += row.join(" | ") + "\n";
+    }
+    document.getElementById("table-preview").textContent = html;
+  }
+}
+
+initSqlJs({ locateFile: filename => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${filename}` }).then(SQL => {
   db = new SQL.Database();
   db.run(dbInitSql);
-  startCountdown();
+  showStage();
 });
 
-function startCountdown() {
-  updateTimer();
-  timer = setInterval(() => {
-    countdown--;
-    updateTimer();
-    if (countdown === 0) {
-      clearInterval(timer);
-      showFeedback("❌ Time's up! You missed it!", false);
-    }
-  }, 1000);
-}
-
-function updateTimer() {
-  document.getElementById("timer").textContent = `⏱ ${countdown}s`;
-}
-
-function showFeedback(msg, success) {
-  const feedback = document.getElementById("feedback");
-  feedback.textContent = msg;
-  feedback.style.color = success ? "#4caf50" : "#f44336";
-}
-
 document.getElementById("run-btn").addEventListener("click", () => {
-  const code = document.getElementById("sql-input").value.trim();
+  const code = document.getElementById("sql-input").value;
   try {
     const res = db.exec(code);
-    if (code.replace(/\s+/g, " ") === correctQuery.replace(/\s+/g, " ")) {
-      clearInterval(timer);
-      score += 100;
-      document.getElementById("score").textContent = `⭐ Score: ${score}`;
-      showFeedback("✅ Correct! You're a SQL Sniper!", true);
-    } else {
-      showFeedback("💥 Wrong fix! Try again...", false);
-    }
-
-    let output = "";
     if (res.length > 0) {
-      const cols = res[0].columns;
-      const rows = res[0].values;
-      output += "<table><tr>" + cols.map(c => `<th>${c}</th>`).join("") + "</tr>";
-      rows.forEach(r => {
-        output += "<tr>" + r.map(val => `<td>${val}</td>`).join("") + "</tr>";
+      let output = "<table><tr>";
+      res[0].columns.forEach(col => {
+        output += `<th>${col}</th>`;
+      });
+      output += "</tr>";
+      res[0].values.forEach(row => {
+        output += "<tr>";
+        row.forEach(val => {
+          output += `<td>${val}</td>`;
+        });
+        output += "</tr>";
       });
       output += "</table>";
+      document.getElementById("result-table").innerHTML = output;
     } else {
-      output = "No results.";
+      document.getElementById("result-table").textContent = "No results.";
     }
-    document.getElementById("result-table").innerHTML = output;
+
+    if (stages[stage].answerCheck(res)) {
+      document.getElementById("feedback").textContent = "✅ Excellent! Moving to the next stage...";
+      stage++;
+      if (stage < stages.length) setTimeout(showStage, 1500);
+      else document.getElementById("feedback").textContent += " 🎉 You've mastered the game!";
+    } else {
+      document.getElementById("feedback").textContent = "❌ Nope... check your query.";
+    }
   } catch (e) {
-    showFeedback("💥 Syntax Error!", false);
-    document.getElementById("result-table").textContent = "";
+    document.getElementById("result-table").textContent = e.message;
+    document.getElementById("feedback").textContent = "⛔ Query error.";
   }
 });
