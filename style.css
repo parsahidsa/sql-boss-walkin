@@ -1,80 +1,109 @@
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
+  padding: 0;
   background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  font-family: 'Fira Code', monospace;
   color: #fff;
 }
-.container {
-  max-width: 900px;
+.game-container {
+  max-width: 1100px;
   margin: auto;
   padding: 20px;
 }
 header {
   text-align: center;
-  margin-bottom: 20px;
+  padding: 20px;
 }
 .subtitle {
   color: #ccc;
-  font-weight: 300;
+  margin-top: -10px;
 }
-main {
-  background: #1e1e1e;
-  padding: 20px;
-  border-radius: 10px;
-}
-.mission h2 {
-  margin-top: 0;
-  color: #ffeb3b;
-}
-#broken-query {
+.mission-box {
+  display: flex;
   background: #263238;
   padding: 15px;
-  font-family: monospace;
-  font-size: 15px;
-  border-radius: 8px;
-  overflow-x: auto;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  align-items: center;
 }
-.input-area {
-  margin-top: 20px;
+.npc-avatar {
+  font-size: 50px;
+  margin-right: 15px;
 }
-textarea {
-  width: 100%;
-  height: 100px;
-  background: #111;
-  color: #fff;
-  border: none;
-  font-size: 14px;
-  border-radius: 6px;
-  padding: 10px;
-  font-family: monospace;
+.npc-dialogue h2 {
+  margin: 0;
 }
-button {
-  margin-top: 10px;
-  background: #4caf50;
+.npc-dialogue p {
+  color: #cfd8dc;
+}
+.main-panel {
+  display: flex;
+  gap: 20px;
+}
+.data-preview, .query-box {
+  flex: 1;
+  background: #37474f;
+  padding: 15px;
+  border-radius: 10px;
+}
+.btn-group button {
+  background: #00acc1;
   color: white;
   border: none;
-  padding: 10px 15px;
-  font-size: 15px;
+  padding: 8px 12px;
+  margin: 5px 5px 10px 0;
   border-radius: 5px;
   cursor: pointer;
 }
-button:hover {
-  background: #388e3c;
+.btn-group button:hover {
+  background: #00838f;
+}
+#table-preview {
+  background: #263238;
+  padding: 10px;
+  border-radius: 5px;
+  max-height: 200px;
+  overflow: auto;
+}
+#sql-input {
+  width: 100%;
+  height: 100px;
+  background: #263238;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+#run-btn {
+  margin-top: 10px;
+  padding: 10px 15px;
+  background: #43a047;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#run-btn:hover {
+  background: #2e7d32;
+}
+#result-table {
+  background: #1e1e1e;
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+#result-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+#result-table th, #result-table td {
+  border: 1px solid #555;
+  padding: 5px 10px;
+  text-align: left;
 }
 #feedback {
   margin-top: 10px;
   font-weight: bold;
-}
-#result-table {
-  margin-top: 10px;
-  background: #0d47a1;
-  padding: 10px;
-  border-radius: 5px;
-}
-.hud {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-  font-weight: bold;
-  font-size: 18px;
 }
