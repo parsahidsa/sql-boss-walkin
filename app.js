@@ -18,8 +18,9 @@ function startCountdown() {
     updateTimer();
     if (countdown === 0) {
       clearInterval(timer);
-      document.getElementById("boss-dialogue").textContent = "You're fired!";
-      document.getElementById("boss-dialogue").style.background = "#f44336";
+      document.getElementById("speech-bubble").textContent = "You're fired!";
+      document.getElementById("speech-bubble").style.background = "#f44336";
+      document.querySelector(".room").classList.add("shake");
     }
   }, 1000);
 }
