@@ -10,7 +10,33 @@ const stages = [
     title: "Stage 2: Loyal Customers",
     mission: "Find customers who placed more than 3 orders.",
     answerCheck: (rows) => rows.length === 1 && rows[0].values[0] == 1
+  },
+  {
+  title: "Stage 3: Popular Products",
+  mission: "List product_id(s) that appear more than once in order_items.",
+  answerCheck: (rows) =>
+    rows.length === 1 && rows[0].values[0] == 2
+},
+  {
+  title: "Stage 4: Orders from Customer 1",
+  mission: "Find all order IDs placed by customer with ID 1.",
+  answerCheck: (rows) => {
+    const ids = rows.map(r => r.values[0]);
+    return JSON.stringify(ids.sort()) === JSON.stringify([1, 3, 5, 6]);
   }
+},
+  {
+  title: "Stage 5: Items per Order",
+  mission: "Show each order_id with how many items it has.",
+  answerCheck: (rows) => {
+    return rows.length === 6 && rows[0].values.length === 2;
+  }
+},
+  {
+  title: "Stage 6: Orders with no items",
+  mission: "Find order_id(s) from 'orders' that have no matching rows in order_items.",
+  answerCheck: (rows) => rows.length === 0
+}
 ];
 
 const dbInitSql = `
